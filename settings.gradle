@@ -1,0 +1,3 @@
+include ':app', ':library', ':xutilslib', ':xutils'
+project(':xutilslib').projectDir = new File('xutilslibrary')
+project(':xutils').projectDir = new File('xutilslibrary/app')
