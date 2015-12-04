@@ -25,8 +25,8 @@ import java.util.ArrayList;
  */
 public class LeftFragment extends BaseFragment {
     ArrayList<NewsData.NewsMenuData> dataList ;
-    private String[] strings = new String[]{"首页","设置","推荐","关于"};
-    private int[] bitmapId = new int[]{R.mipmap.ic_navi_home,R.mipmap.ic_navi_settings,R.mipmap.ic_navi_intro,R.mipmap.ic_navi_about};
+    private String[] strings = new String[]{"设置","推荐","关于"};
+    private int[] bitmapId = new int[]{R.mipmap.ic_navi_settings,R.mipmap.ic_navi_intro,R.mipmap.ic_navi_about};
     private ListView lv_menu;
     private StringAdapter stringAdapter;
     private int mCurrentPos;

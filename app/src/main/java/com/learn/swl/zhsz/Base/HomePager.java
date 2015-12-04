@@ -6,10 +6,6 @@ import android.app.Activity;
 import com.learn.swl.zhsz.DetailPager.AboutMenuDetailPager;
 import com.learn.swl.zhsz.DetailPager.HomeMenuDetailPager;
 
-import com.learn.swl.zhsz.DetailPager.IntroMenuDetailPager;
-
-import com.learn.swl.zhsz.DetailPager.SettingMenuDetailPager;
-
 import java.util.ArrayList;
 
 /**
@@ -26,9 +22,6 @@ public class HomePager extends BasePager {
         //准备四个菜单
         mPagers = new ArrayList<BaseMenuDetailPager>();
         mPagers.add(new HomeMenuDetailPager(mActivity));
-        mPagers.add(new SettingMenuDetailPager(mActivity));
-        mPagers.add(new IntroMenuDetailPager(mActivity));
-        mPagers.add(new AboutMenuDetailPager(mActivity));
         //layout_base_content.addView(tv_content);
         setCurrentMenuDetailPager(0);
         setSlidingMenuEnable(true);

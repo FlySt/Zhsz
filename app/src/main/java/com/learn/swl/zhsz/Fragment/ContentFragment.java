@@ -7,14 +7,10 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.learn.swl.zhsz.Base.BasePager;
-import com.learn.swl.zhsz.Base.GovAffairsPager;
 import com.learn.swl.zhsz.Base.HomePager;
 import com.learn.swl.zhsz.Base.NewsCenterPager;
-import com.learn.swl.zhsz.Base.SettingPager;
-import com.learn.swl.zhsz.Base.SmartServicePager;
 import com.learn.swl.zhsz.Base.TravelPager;
 import com.learn.swl.zhsz.R;
-import com.learn.swl.zhsz.domain.NewsData;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
