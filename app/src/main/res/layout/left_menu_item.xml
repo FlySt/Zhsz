@@ -10,6 +10,8 @@
         android:drawableLeft="@drawable/btn_menu_selector"
         android:textColor="@drawable/btn_menu_text_selector"
         android:text="组图"
+        android:padding="10dp"
+        android:drawablePadding="5dp"
         android:textSize="20sp"
         android:enabled="false"
         android:layout_gravity="center"

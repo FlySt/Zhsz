@@ -12,6 +12,7 @@ import com.learn.swl.zhsz.Base.HomePager;
 import com.learn.swl.zhsz.Base.NewsCenterPager;
 import com.learn.swl.zhsz.Base.SettingPager;
 import com.learn.swl.zhsz.Base.SmartServicePager;
+import com.learn.swl.zhsz.Base.TravelPager;
 import com.learn.swl.zhsz.R;
 import com.learn.swl.zhsz.domain.NewsData;
 import com.lidroid.xutils.ViewUtils;
@@ -40,15 +41,9 @@ public class ContentFragment extends BaseFragment {
     public void initData() {
         bottom_group.check(R.id.rb_home);
 
-      /*  for(int i=0;i<5;i++){
-            BasePager pager = new BasePager(mActivity);
-            pagerList.add(pager);
-        }*/
         pagerList.add(new HomePager(mActivity));
         pagerList.add(new NewsCenterPager(mActivity));
-        pagerList.add(new SmartServicePager(mActivity));
-        pagerList.add(new GovAffairsPager(mActivity));
-        pagerList.add(new SettingPager(mActivity));
+        pagerList.add(new TravelPager(mActivity));
         vp_content.setAdapter(new ContentAdapter());
         bottom_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -60,14 +55,8 @@ public class ContentFragment extends BaseFragment {
                     case R.id.rb_news:
                         vp_content.setCurrentItem(1, false);
                         break;
-                    case R.id.rb_service:
+                    case R.id.rb_travel:
                         vp_content.setCurrentItem(2, false);
-                        break;
-                    case R.id.rb_gova:
-                        vp_content.setCurrentItem(3, false);
-                        break;
-                    case R.id.rb_setting:
-                        vp_content.setCurrentItem(4, false);
                         break;
                 }
             }
@@ -118,5 +107,8 @@ public class ContentFragment extends BaseFragment {
     }
     public  NewsCenterPager getNewsCenterPager(){
         return (NewsCenterPager)pagerList.get(1);
+    }
+    public HomePager getHomePager(){
+        return (HomePager)pagerList.get(0);
     }
 }

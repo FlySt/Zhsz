@@ -1,5 +1,8 @@
 package com.learn.swl.zhsz.Fragment;
 
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -8,7 +11,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.learn.swl.zhsz.Base.HomePager;
 import com.learn.swl.zhsz.Base.NewsCenterPager;
+import com.learn.swl.zhsz.LeftActivity;
 import com.learn.swl.zhsz.MainActivity;
 import com.learn.swl.zhsz.R;
 import com.learn.swl.zhsz.domain.NewsData;
@@ -20,8 +25,10 @@ import java.util.ArrayList;
  */
 public class LeftFragment extends BaseFragment {
     ArrayList<NewsData.NewsMenuData> dataList ;
+    private String[] strings = new String[]{"首页","设置","推荐","关于"};
+    private int[] bitmapId = new int[]{R.mipmap.ic_navi_home,R.mipmap.ic_navi_settings,R.mipmap.ic_navi_intro,R.mipmap.ic_navi_about};
     private ListView lv_menu;
-    MenuAdapter mAdapter;
+    private StringAdapter stringAdapter;
     private int mCurrentPos;
     @Override
     public View initView() {
@@ -31,11 +38,13 @@ public class LeftFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mCurrentPos = position;
-                mAdapter.notifyDataSetChanged();
-                setCurrentDetailPager(position);
+                stringAdapter.notifyDataSetChanged();
+                selectFragment(position);
                 toggleSlidingMenu();
             }
         });
+        stringAdapter = new StringAdapter();
+        lv_menu.setAdapter(stringAdapter);
         return view;
     }
     private void toggleSlidingMenu(){
@@ -43,32 +52,25 @@ public class LeftFragment extends BaseFragment {
         SlidingMenu slidingMenu = mainActivity.getSlidingMenu();
         slidingMenu.toggle();
     }
-    private void setCurrentDetailPager(int position){
-        MainActivity mainActivity = (MainActivity)mActivity;
-        ContentFragment fragment = mainActivity.getContentFragment();
-        NewsCenterPager pager =  fragment.getNewsCenterPager();
-        pager.setCurrentMenuDetailPager(position);
+    private void selectFragment(int position){
+        Intent intent = new Intent(mActivity, LeftActivity.class);
+        startActivity(intent);
     }
-    public void setNewsData(NewsData data){
-        dataList = data.data;
-        mAdapter = new MenuAdapter();
-        lv_menu.setAdapter(mAdapter);
-    }
+
     @Override
     public void initData() {
 
     }
-
-    class MenuAdapter extends BaseAdapter{
+    class StringAdapter extends BaseAdapter{
 
         @Override
         public int getCount() {
-            return dataList.size();
+            return strings.length;
         }
 
         @Override
-        public NewsData.NewsMenuData getItem(int position) {
-            return dataList.get(position);
+        public String getItem(int position) {
+            return strings[position];
         }
 
         @Override
@@ -80,13 +82,16 @@ public class LeftFragment extends BaseFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = View.inflate(mActivity,R.layout.left_menu_item,null);
             TextView tv_left_tile = (TextView)view.findViewById(R.id.tv_left_title);
-            tv_left_tile.setText(getItem(position).title);
-            if(mCurrentPos == position){
+            tv_left_tile.setText(strings[position]);
+            Drawable drawable = getResources().getDrawable(bitmapId[position]);
+            tv_left_tile.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
+         /*   if(mCurrentPos == position){
                 tv_left_tile.setEnabled(true);
             }else{
                 tv_left_tile.setEnabled(false);
-            }
+            } */
             return view;
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package com.learn.swl.zhsz.Base;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -14,7 +15,7 @@ import com.learn.swl.zhsz.R;
 /**
  * Created by ADM on 2015/11/27.
  */
-public class BasePager {
+public class BasePager extends FragmentActivity{
     public Activity mActivity;
     public View mRootView;
     public FrameLayout layout_base_content;

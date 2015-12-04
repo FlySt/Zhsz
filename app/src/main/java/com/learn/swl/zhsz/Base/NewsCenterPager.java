@@ -1,19 +1,11 @@
 package com.learn.swl.zhsz.Base;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.view.Gravity;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.learn.swl.zhsz.BmobFile.Data;
-import com.learn.swl.zhsz.BmobFile.Pic;
-import com.learn.swl.zhsz.DetailPager.InteractMenuDetailPager;
 import com.learn.swl.zhsz.DetailPager.NewsMenuDetailPager;
-import com.learn.swl.zhsz.DetailPager.PhotoMenuDetailPager;
-import com.learn.swl.zhsz.DetailPager.TopicMenuDetailPager;
 import com.learn.swl.zhsz.Fragment.LeftFragment;
 import com.learn.swl.zhsz.MainActivity;
 import com.learn.swl.zhsz.domain.NewsData;
@@ -104,21 +96,9 @@ public class NewsCenterPager extends BasePager {
     }
 
     private void parseData(String result){
-        Gson gson = new Gson();
-
-        NewsData data = gson.fromJson(result,NewsData.class);
-        System.out.println("解析结果："+data);
-        MainActivity mainActivity = (MainActivity)mActivity;
-        LeftFragment leftFragment = mainActivity.getLeftFragment();
-        leftFragment.setNewsData(data);
-
         //准备四个菜单
         mPagers = new ArrayList<BaseMenuDetailPager>();
         mPagers.add(new NewsMenuDetailPager(mActivity));
-        mPagers.add(new TopicMenuDetailPager(mActivity));
-        mPagers.add(new PhotoMenuDetailPager(mActivity));
-        mPagers.add(new InteractMenuDetailPager(mActivity));
-
         setCurrentMenuDetailPager(0);
     }
 
