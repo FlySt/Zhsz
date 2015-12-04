@@ -54,6 +54,7 @@ public class LeftFragment extends BaseFragment {
     }
     private void selectFragment(int position){
         Intent intent = new Intent(mActivity, LeftActivity.class);
+        intent.putExtra("position",position);
         startActivity(intent);
     }
 
