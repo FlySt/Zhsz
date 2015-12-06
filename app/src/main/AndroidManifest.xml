@@ -67,10 +67,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".SettingActivity"
-            android:label="@string/title_activity_setting" >
-        </activity>
-        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
@@ -83,6 +79,24 @@
         <activity
             android:name=".LeftActivity"
             android:label="@string/title_activity_left" >
+        </activity>
+        <!-- qq登录所需 -->
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tencent100442925" />
+            </intent-filter>
         </activity>
     </application>
 

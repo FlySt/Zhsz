@@ -89,6 +89,7 @@ public class RegisterActivity extends Activity {
                 // TODO Auto-generated method stub
                 progress.dismiss();
                 PerfUtils.ShowToast(RegisterActivity.this, "注册成功");
+                System.out.println("注册成功" );
                 // ���豸��username���а�
                 //���µ���λ����Ϣ
                 // updateUserLocation();
@@ -105,7 +106,8 @@ public class RegisterActivity extends Activity {
             public void onFailure(int arg0, String arg1) {
                 // TODO Auto-generated method stub
                 BmobLog.i(arg1);
-                PerfUtils.ShowToast(RegisterActivity.this, "注册失败"+arg1);
+                PerfUtils.ShowToast(RegisterActivity.this, "注册失败" + arg1);
+                System.out.println("注册失败" + arg1);
                 progress.dismiss();
             }
         });

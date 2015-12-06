@@ -31,11 +31,13 @@
         android:layout_height="100dp"
         android:orientation="vertical">
         <EditText
+            android:id="@+id/et_account"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:drawableLeft="@mipmap/user_account"
             android:hint="帐号/邮箱/手机号"/>
         <EditText
+            android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:drawableLeft="@mipmap/user_password"

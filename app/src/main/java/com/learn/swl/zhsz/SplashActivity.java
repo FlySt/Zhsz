@@ -31,6 +31,7 @@ import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.GetListener;
+import cn.sharesdk.framework.ShareSDK;
 
 
 public class SplashActivity extends Activity {
@@ -44,6 +45,7 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         // 初始化 Bmob SDK
         Bmob.initialize(this, Config.applicationId);
+        ShareSDK.initSDK(this);
         splash_layout = (RelativeLayout)findViewById(R.id.splash_layout);
         iv_splash = (ImageView)findViewById(R.id.iv_splash);
         getSplashPic();

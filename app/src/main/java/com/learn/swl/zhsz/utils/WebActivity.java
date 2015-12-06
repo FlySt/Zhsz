@@ -74,7 +74,7 @@ public class WebActivity extends Activity implements View.OnClickListener{
     }
         private void showShare() {
             System.out.println("分享");
-            ShareSDK.initSDK(this);
+
             OnekeyShare oks = new OnekeyShare();
             //关闭sso授权
             oks.disableSSOWhenAuthorize();
