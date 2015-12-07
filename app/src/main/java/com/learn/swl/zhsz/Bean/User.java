@@ -3,6 +3,7 @@ package com.learn.swl.zhsz.Bean;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.datatype.BmobRelation;
 
@@ -17,6 +18,7 @@ public class User extends BmobUser{
  */
 private static final long serialVersionUID = 1L;
 
+       private BmobFile avatar;
         /**
          * 发布的博客列表
          */
@@ -32,7 +34,8 @@ private static final long serialVersionUID = 1L;
          */
         private Boolean sex;
 
-        //private Blog blog;
+
+//private Blog blog;
 
         /**
          * 地理坐标
@@ -87,5 +90,11 @@ private static final long serialVersionUID = 1L;
         public void setSortLetters(String sortLetters) {
             this.sortLetters = sortLetters;
         }
+        public BmobFile getAvatar() {
+            return avatar;
+        }
 
+        public void setAvatar(BmobFile avatar) {
+            this.avatar = avatar;
+        }
 }

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bmob.utils.BmobLog;
 import com.learn.swl.zhsz.Bean.User;
@@ -35,6 +36,7 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.tencent.qzone.QZone;
 
 
@@ -110,10 +112,12 @@ public class LoginActivity extends Activity implements View.OnClickListener,Plat
           //  popupOthers();
             return;
         }
-
+        if(plat.isValid()){
+            plat.removeAccount();
+        }
         plat.setPlatformActionListener(this);
         //关闭SSO授权
-        plat.SSOSetting(true);
+        plat.SSOSetting(false);
         plat.showUser(null);
     }
     @Override
@@ -133,9 +137,9 @@ public class LoginActivity extends Activity implements View.OnClickListener,Plat
                 break;
             case R.id.ib_qq:
                 //QQ空间
-              //  Platform qzone = ShareSDK.getPlatform(QZone.NAME);
-            //    authorize(qzone);
-                qqAuthorize();
+                Platform qzone = ShareSDK.getPlatform(QQ.NAME);
+                authorize(qzone);
+               // qqAuthorize();
                 break;
         }
     }
@@ -186,6 +190,7 @@ public class LoginActivity extends Activity implements View.OnClickListener,Plat
             @Override
             public void onComplete(Object arg0) {
                 System.out.println("第三方登陆onComplete");
+                toast("第三方登陆onComplete"+arg0);
                 // TODO Auto-generated method stub
                 if(arg0!=null){
                     JSONObject jsonObject = (JSONObject) arg0;
@@ -264,6 +269,9 @@ public class LoginActivity extends Activity implements View.OnClickListener,Plat
                 BmobLog.i(arg1);
                 PerfUtils.ShowToast(LoginActivity.this, "注册失败" + arg1);
                 System.out.println("注册失败" + arg1);
+                Intent intent = new Intent(LoginActivity.this, LeftActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -273,7 +281,7 @@ public class LoginActivity extends Activity implements View.OnClickListener,Plat
         System.out.println("登录成功");
         //解析部分用户资料字段
         System.out.println("登录成功" + hashMap.toString());
-        System.out.println("action:"+i);
+        System.out.println("action:" + i);
         if ( i== Platform.ACTION_USER_INFOR) {
             PlatformDb platDB = platform.getDb();//获取数平台数据DB
             //通过DB获取各种数据
@@ -317,5 +325,9 @@ public class LoginActivity extends Activity implements View.OnClickListener,Plat
     @Override
     public void onCancel(Platform platform, int i) {
 
+    }
+
+    private void toast(String msg){
+        Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 }
