@@ -80,7 +80,6 @@ public class RegisterActivity extends Activity {
         user.setUsername(account);
         user.setPassword(password);
         //��user���豸id���а�aa
-        user.setSex(true);
 
         user.signUp(RegisterActivity.this, new SaveListener() {
 

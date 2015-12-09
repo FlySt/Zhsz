@@ -13,7 +13,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,20 +49,26 @@ import cn.bmob.v3.listener.UploadFileListener;
 /**
  * Created by SWan on 2015/12/4.
  */
-public class SettingFragment extends BaseFragment implements View.OnClickListener{
+public class SettingFragment extends BaseFragment implements View.OnClickListener,CompoundButton.OnCheckedChangeListener {
     public static final String TAG = "SettingFragment";
-    private RelativeLayout layout_user_icon;
+    private RelativeLayout layout_user_icon,layout_nick;
     private TextView tv_nick;
     private Button btn_logout;
     private ImageView iv_user_icon;
+    private CheckBox sex_switch;
     @Override
     public View initView() {
         View view = View.inflate(mActivity, R.layout.fragment_setting,null);
         layout_user_icon = (RelativeLayout)view.findViewById(R.id.layout_user_icon);
+        layout_nick = (RelativeLayout)view.findViewById(R.id.layout_nick);
         tv_nick = (TextView)view.findViewById(R.id.tv_nick);
         btn_logout = (Button)view.findViewById(R.id.btn_logout);
         iv_user_icon = (ImageView)view.findViewById(R.id.iv_user_icon);
+        sex_switch = (CheckBox)view.findViewById(R.id.sex_choice_switch);
         layout_user_icon.setOnClickListener(this);
+        layout_nick.setOnClickListener(this);
+        btn_logout.setOnClickListener(this);
+        sex_switch.setOnCheckedChangeListener(this);
         return view;
     }
 
@@ -67,9 +76,18 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void initData() {
         System.out.println("数据初始化");
+        initPersonInfo();
+    }
+    private void initPersonInfo(){
         User user = PerfUtils.getCurrentUser(mActivity);
         if(user!=null){
             tv_nick.setText(user.getNick().toString());
+            if (user.getSex()) {
+                Log.i(TAG,"SEX_MALE:");
+                sex_switch.setChecked(true);
+            } else {
+                sex_switch.setChecked(false);
+            }
             BmobFile avatarFile = user.getAvatar();
             if (null != avatarFile) {
                 ImageLoader.getInstance().displayImage(
@@ -90,19 +108,47 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
                         });
             }
             btn_logout.setText("退出登录");
+        }else{
+            tv_nick.setText(getResources().getString(R.string.click_login));
+            btn_logout.setText("登录");
         }
+    }
+    private boolean isLogin(){
+        User user = PerfUtils.getCurrentUser(mActivity);
+        if(user!=null){
+            return true;
+        }
+        return false;
+    }
+    private void goLogin(){
+        Intent intent = new Intent(mActivity, LoginActivity.class);
+        mActivity.startActivity(intent);
+        mActivity.finish();
+        PerfUtils.ShowToast(mActivity, "请先登录");
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.layout_user_icon:
-                User user = PerfUtils.getCurrentUser(mActivity);
-                if(user!=null){
+
+                if(isLogin()){
                     showAlbumDialog();
                 }else{
-                    Intent intent = new Intent(mActivity, LoginActivity.class);
-                    mActivity.startActivity(intent);
-                    mActivity.finish();
+                    goLogin();
+                }
+                break;
+            case R.id.layout_nick:
+                if(isLogin()){
+
+                }else{
+                    goLogin();
+                }
+                break;
+            case R.id.btn_logout:
+                if(isLogin()){
+                    BmobUser.logOut(mActivity);
+                }else {
+                    goLogin();
                 }
                 break;
         }
@@ -313,5 +359,42 @@ public class SettingFragment extends BaseFragment implements View.OnClickListene
         }
         Log.i(TAG, file.getAbsolutePath());
         return file.getAbsolutePath();
+    }
+
+    private void updateSex(int sex){
+        User user = BmobUser.getCurrentUser(mActivity,User.class);
+        Log.i(TAG,"updateSex:"+sex);
+        if(user!=null){
+            if(sex == 0){
+                user.setSex(GlobalContants.SEX_FEMALE);
+            }else{
+                user.setSex(GlobalContants.SEX_MALE);
+            }
+            user.update(mActivity, new UpdateListener() {
+                @Override
+                public void onSuccess() {
+                    Log.i(TAG,"更新信息成功:");
+                    PerfUtils.ShowToast(mActivity,"更新信息成功");
+                }
+
+                @Override
+                public void onFailure(int i, String s) {
+                    Log.i(TAG,"更新信息失败，请检查网络:");
+                    PerfUtils.ShowToast(mActivity,"更新信息失败，请检查网络");
+                }
+            });
+        }
+    }
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()){
+            case R.id.sex_choice_switch:
+                if(isChecked){
+                    updateSex(1);
+                }else {
+                    updateSex(0);
+                }
+                break;
+        }
     }
 }

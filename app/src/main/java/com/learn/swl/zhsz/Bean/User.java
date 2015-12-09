@@ -18,7 +18,6 @@ public class User extends BmobUser{
  */
 private static final long serialVersionUID = 1L;
 
-       private BmobFile avatar;
         /**
          * 发布的博客列表
          */
@@ -34,8 +33,7 @@ private static final long serialVersionUID = 1L;
          */
         private Boolean sex;
 
-
-//private Blog blog;
+        //private Blog blog;
 
         /**
          * 地理坐标
@@ -44,8 +42,17 @@ private static final long serialVersionUID = 1L;
 
         private Integer hight;
         private String nick;
+        private BmobFile avatar;
 
-        public String getNick() {
+        public BmobFile getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(BmobFile avatar) {
+            this.avatar = avatar;
+        }
+
+         public String getNick() {
             return nick;
         }
 
@@ -90,11 +97,5 @@ private static final long serialVersionUID = 1L;
         public void setSortLetters(String sortLetters) {
             this.sortLetters = sortLetters;
         }
-        public BmobFile getAvatar() {
-            return avatar;
-        }
 
-        public void setAvatar(BmobFile avatar) {
-            this.avatar = avatar;
-        }
 }

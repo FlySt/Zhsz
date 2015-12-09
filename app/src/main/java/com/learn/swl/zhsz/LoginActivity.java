@@ -242,7 +242,6 @@ public class LoginActivity extends Activity implements View.OnClickListener,Plat
         user.setUsername(username);
         user.setPassword("123456");
         //��user���豸id���а�aa
-        user.setSex(true);
 
         user.signUp(LoginActivity.this, new SaveListener() {
 

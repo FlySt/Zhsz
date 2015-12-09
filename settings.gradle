@@ -1,3 +1,4 @@
-include ':app', ':library', ':xutilslib', ':xutils'
+include ':app', ':library', ':xutilslib', ':xutils', ':indicatorlib'
 project(':xutilslib').projectDir = new File('xutilslibrary')
 project(':xutils').projectDir = new File('xutilslibrary/app')
+project(':indicatorlib').projectDir = new File('indicator/app')

@@ -40,11 +40,13 @@
             android:layout_height="wrap_content"
             android:hint="帐号/手机号/邮箱"/>
         <EditText
+            android:password="true"
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="密码"/>
         <EditText
+            android:password="true"
             android:id="@+id/et_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

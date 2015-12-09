@@ -11,4 +11,7 @@ public class GlobalContants {
     public static final int REQUESTCODE_UPLOADAVATAR_CAMERA = 1;//拍照修改头像
     public static final int REQUESTCODE_UPLOADAVATAR_LOCATION = 2;//本地相册修改头像
     public static final int REQUESTCODE_UPLOADAVATAR_CROP = 3;//系统裁剪头像
+
+    public static final boolean SEX_FEMALE = false;
+    public static final boolean SEX_MALE = true;
 }

@@ -37,6 +37,7 @@
             android:drawableLeft="@mipmap/user_account"
             android:hint="帐号/邮箱/手机号"/>
         <EditText
+            android:password="true"
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="50dp"

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,25 +16,30 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.learn.swl.zhsz.Base.BaseMenuDetailPager;
+import com.learn.swl.zhsz.Base.BasePager;
 import com.learn.swl.zhsz.BmobFile.Data;
 import com.learn.swl.zhsz.BmobFile.Pic;
 import com.learn.swl.zhsz.BmobFile.Web;
 import com.learn.swl.zhsz.Fragment.LeftFragment;
 import com.learn.swl.zhsz.MainActivity;
 import com.learn.swl.zhsz.R;
+import com.learn.swl.zhsz.View.RefreshListView;
 import com.learn.swl.zhsz.domain.NewsData;
 import com.learn.swl.zhsz.domain.TabNewsData;
 import com.learn.swl.zhsz.utils.WebActivity;
+import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,12 +52,17 @@ import cn.bmob.v3.listener.GetListener;
  * Created by ADM on 2015/12/1.
  */
 public class NewsMenuDetailPager extends BaseMenuDetailPager {
+    TabNewsData data;
     BmobFile bmobFile;
-    private ListView lv_newslist;
+    private RefreshListView lv_newslist;
     private TextView tv_title;
     private TextView tv_content;
     private ImageView iv_image;
     private ListAdapter mAdapter;
+    private ViewPager vp_top;
+    private TextView tv_top_title;
+    private CirclePageIndicator mIndicator;
+    private RelativeLayout layout_header;
     private ArrayList<TabNewsData.TabListNewsData> newsDataArrayList = new ArrayList<TabNewsData.TabListNewsData>();
     private ArrayList<Bitmap> newsBitmap = new ArrayList<Bitmap>();
     public NewsMenuDetailPager(Activity mActivity) {
@@ -59,13 +72,35 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager {
     @Override
     public View initView() {
         View view = View.inflate(mActivity, R.layout.activity_news,null);
-        lv_newslist = (ListView)view.findViewById(R.id.lv_newslist);
+        View headerview = View.inflate(mActivity,R.layout.top_header_view,null);
+        lv_newslist = (RefreshListView)view.findViewById(R.id.lv_newslist);
+        lv_newslist.addHeaderView(headerview);
+        vp_top = (ViewPager)view.findViewById(R.id.vp_top);
+        tv_top_title = (TextView)view.findViewById(R.id.tv_top_title);
+        mIndicator = (CirclePageIndicator)view.findViewById(R.id.indicator);
         lv_newslist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(mActivity,WebActivity.class);
                 intent.putExtra("url",newsDataArrayList.get(position).url);
                 mActivity.startActivity(intent);
+            }
+        });
+        vp_top.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                TabNewsData.TopNewsData topNewsData = data.data.topnews.get(position);
+                tv_top_title.setText(topNewsData.title);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
         //TextView textView = new TextView(mActivity);
@@ -77,6 +112,39 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager {
 
         getJsonData();
         return view;
+    }
+    class TopNewsAdapter extends PagerAdapter{
+        BitmapUtils utils;
+        public TopNewsAdapter() {
+            utils = new BitmapUtils(mActivity);
+        }
+
+        @Override
+        public int getCount() {
+            return data.data.topnews.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView image = new ImageView(mActivity);
+            image.setImageResource(R.mipmap.image);
+            image.setScaleType(ImageView.ScaleType.FIT_XY);
+            TabNewsData.TopNewsData topNewsData = data.data.topnews.get(position);
+            utils.display(image,topNewsData.topimage);
+            container.addView(image);
+            // pager.initData();
+            return image;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View)object);
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
     }
     class ListAdapter extends BaseAdapter{
 
@@ -160,9 +228,11 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager {
     private void parseData(String result){
         Gson gson = new Gson();
 
-        TabNewsData data = gson.fromJson(result,TabNewsData.class);
+        data = gson.fromJson(result,TabNewsData.class);
         System.out.println("解析结果："+data);
         newsDataArrayList = data.data.news;
+        System.out.println("解析结果："+data.data.topnews.size());
+        tv_top_title.setText(data.data.topnews.get(0).title);
         getImageFromUrl();
         //准备四个菜单
     }
@@ -201,6 +271,9 @@ public class NewsMenuDetailPager extends BaseMenuDetailPager {
     }
     private void refreshList(){
         lv_newslist.setAdapter(mAdapter);
+        vp_top.setAdapter(new TopNewsAdapter());
+        mIndicator.setViewPager(vp_top);
+        mIndicator.setSnap(true);
         mAdapter.notifyDataSetChanged();
     }
     private String getFilename(String path){
