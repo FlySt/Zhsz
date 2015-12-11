@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff">
+        <TextView
+            android:id="@+id/tv_joke_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="这是一个笑话这是一个笑话这是一个笑话这是一个笑话这是一个笑话这是一个笑话这是一个笑话
+            这是一个笑话这是一个笑话这是一个笑话这是一个笑话这是一个笑话这是一个笑话"
+            />
+        <View
+            android:layout_below="@+id/tv_joke_content"
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="#eee"/>
+        <ImageButton
+            android:id="@+id/ib_share"
+            android:layout_below="@+id/tv_joke_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="3dp"
+            android:background="@mipmap/share_icon"/>
+    </RelativeLayout>
+</LinearLayout>

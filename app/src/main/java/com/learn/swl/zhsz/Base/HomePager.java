@@ -19,6 +19,7 @@ public class HomePager extends BasePager {
 
     @Override
     public void initData() {
+        tv_title.setText("段子");
         //准备四个菜单
         mPagers = new ArrayList<BaseMenuDetailPager>();
         mPagers.add(new HomeMenuDetailPager(mActivity));

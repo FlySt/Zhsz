@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -14,10 +15,13 @@ import android.widget.TextView;
 
 import com.learn.swl.zhsz.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by ADM on 2015/12/9.
  */
-public class RefreshListView extends ListView {
+public class RefreshListView extends ListView implements AbsListView.OnScrollListener{
     public static final int STATE_PULL_REFRESH = 0; //下拉刷新
     public static final int STATE_RELEASE_REFRESH = 1; //松开刷新
     public static final int STATE_REFRESHING = 2; //正在刷新
@@ -28,6 +32,8 @@ public class RefreshListView extends ListView {
     private ProgressBar progressBar;
     private RotateAnimation animUp;
     private RotateAnimation animDown;
+
+
     public RefreshListView(Context context) {
         super(context);
         initHeaderView();
@@ -38,16 +44,19 @@ public class RefreshListView extends ListView {
     public RefreshListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initHeaderView();
+        initFooterView();
     }
 
     public RefreshListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initHeaderView();
+        initFooterView();
     }
 
     public RefreshListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initHeaderView();
+        initFooterView();
     }
     private int headerViewHeight;
     private View headerView;
@@ -61,7 +70,18 @@ public class RefreshListView extends ListView {
         headerView.measure(0, 0);
         headerViewHeight = headerView.getMeasuredHeight();
         headerView.setPadding(0,-headerViewHeight,0,0);
+        tv_time.setText("最后刷新时间" + getCurrntTime());
         initArrowAnim();
+    }
+    private View mFooterView;
+    private int mFooterViewHeight;
+    private void initFooterView(){
+        mFooterView = View.inflate(getContext(),R.layout.refresh_footer,null);
+        this.addFooterView(mFooterView);
+        mFooterView.measure(0, 0);
+        mFooterViewHeight = mFooterView.getMeasuredHeight();
+        mFooterView.setPadding(0, -mFooterViewHeight, 0, 0);
+        this.setOnScrollListener(this);
     }
     private int startY = -1;
     private int endY,dY;
@@ -70,6 +90,9 @@ public class RefreshListView extends ListView {
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:
                 startY = (int)ev.getRawY();
+                if(mCurrrentState == STATE_PULL_REFRESH){
+                    return true;
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if(startY == -1){
@@ -108,6 +131,14 @@ public class RefreshListView extends ListView {
         return super.onTouchEvent(ev);
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if(mCurrrentState == STATE_REFRESHING || mCurrrentState == STATE_RELEASE_REFRESH){
+            return true;
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
+
     private void refreshState() {
         switch (mCurrrentState){
             case STATE_PULL_REFRESH:
@@ -115,12 +146,16 @@ public class RefreshListView extends ListView {
                 iv_arrow.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
                 iv_arrow.startAnimation(animDown);
+                this.setEnabled(false);
                 break;
             case STATE_REFRESHING:
                 tv_state.setText("正在刷新");
                 iv_arrow.clearAnimation();// 必须先清除动画,才能隐藏
                 iv_arrow.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
+                if(mListener!=null){
+                    mListener.onRefresh();
+                }
                 break;
             case STATE_RELEASE_REFRESH:
                 tv_state.setText("松开刷新");
@@ -146,5 +181,56 @@ public class RefreshListView extends ListView {
         animDown.setDuration(200);
         animDown.setFillAfter(true);
 
+    }
+    OnRefreshListener mListener;
+    public void setOnRefreshListener(OnRefreshListener listener){
+        mListener = listener;
+    }
+    private boolean isLoadingMore;
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if(scrollState == SCROLL_STATE_IDLE || scrollState == SCROLL_STATE_FLING){
+            if(getLastVisiblePosition() == getCount()-1 && !isLoadingMore){
+                System.out.println("到底了");
+                mFooterView.setPadding(0, 0, 0, 0);//显示
+                setSelection(getCount()-1);//改变listview显示位置
+                isLoadingMore = true;
+                if(mListener!=null){
+                    mListener.onLoadMore();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    public interface OnRefreshListener{
+        public void onRefresh();
+        public void onLoadMore();
+    }
+    public void OnRefreshComplete(boolean sucess){
+        if(isLoadingMore){
+            mFooterView.setPadding(0,-mFooterViewHeight,0,0);//隐藏脚布局
+            isLoadingMore = false;
+        }else{
+            this.setEnabled(true);
+            mCurrrentState =  STATE_PULL_REFRESH;
+            tv_state.setText("下拉刷新");
+            iv_arrow.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            headerView.setPadding(0, -headerViewHeight, 0, 0);// 隐藏
+            if(sucess){
+                tv_time.setText("最后刷新时间"+getCurrntTime());
+            }
+        }
+
+
+    }
+    public String getCurrntTime(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(new Date());
     }
 }

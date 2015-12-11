@@ -36,7 +36,7 @@ public class WebActivity extends Activity implements View.OnClickListener{
         // mWebView.getSettings().setBlockNetworkImage(false);
         mWebView.getSettings().setBlockNetworkImage(false);
         mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setJavaScriptEnabled(false);
         mWebView.getSettings().setBuiltInZoomControls(true);
        // mWebView.getSettings().setUseWideViewPort(true);//双击缩放
         //mWebView.getSettings().setLoadsImagesAutomatically(true);
